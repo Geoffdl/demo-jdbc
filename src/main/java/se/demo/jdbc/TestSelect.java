@@ -1,14 +1,16 @@
-package se.demo;
+package se.demo.jdbc;
+
+import se.demo.jdbc.entites.Fournisseur;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
-
-public class TestConnexionJDBC
+public class TestSelect
 {
     public static void main(String[] args)
     {
-
         ResourceBundle config = ResourceBundle.getBundle("database");
         String url = config.getString("database.url");
         String user = config.getString("database.user");
@@ -16,35 +18,23 @@ public class TestConnexionJDBC
 
 
         Statement stmt = null;
-        ResultSet curseur = null;
+
+        ArrayList<Fournisseur> fournisseurData = new ArrayList<>();
+
 
         try (Connection connection = DriverManager.getConnection(url, user, pwd))
         {
 
-            System.out.println("Connected on :" + connection);
-
             stmt = connection.createStatement();
 
-            //insert
-
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS compte(Id int PRIMARY KEY auto_increment, Nom varchar(25))");
-            stmt.executeUpdate("INSERT INTO compte (nom) value ('Geoff')");
-
-            //update
-            stmt.executeUpdate("UPDATE compte SET nom=UPPER(nom) WHERE nom = 'Geoff'");
-
-            //delete
-            stmt.executeUpdate("DELETE FROM compte WHERE nom = 'bob'");
-
-
-            //read
-            curseur = stmt.executeQuery("SELECT * FROM compte");
+            ResultSet curseur = stmt.executeQuery("SELECT * FROM FOURNISSEUR");
 
             while (curseur.next())
             {
-                System.out.println(curseur.getInt("id") + " - " + curseur.getString("nom"));
+                fournisseurData.add(new Fournisseur(curseur.getInt("id"), curseur.getString("nom")));
             }
 
+            System.out.println(fournisseurData);
 
         } catch (SQLException ex)
         {
@@ -53,17 +43,6 @@ public class TestConnexionJDBC
             System.out.println("VendorError: " + ex.getErrorCode());
         } finally
         {
-
-            if (curseur != null)
-            {
-                try
-                {
-                    curseur.close();
-                } catch (SQLException e)
-                {
-                    throw new RuntimeException(e);
-                }
-            }
             if (stmt != null)
             {
                 try
@@ -74,8 +53,6 @@ public class TestConnexionJDBC
                     throw new RuntimeException(e);
                 }
             }
-
-
         }
     }
 }
