@@ -1,10 +1,7 @@
 package se.demo.jdbc.dao;
 
-import se.demo.jdbc.dao.util.Display;
-import se.demo.jdbc.entites.Fournisseur;
 
-import java.util.ArrayList;
-import java.util.List;
+import se.demo.jdbc.entites.Fournisseur;
 import java.util.Scanner;
 
 public class TestRechercheParId
