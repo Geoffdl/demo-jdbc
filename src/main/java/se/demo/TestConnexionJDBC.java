@@ -13,17 +13,17 @@ public class TestConnexionJDBC
         ResourceBundle config = ResourceBundle.getBundle("database");
         String url = config.getString("database.url");
         String user = config.getString("database.user");
-        String password = config.getString("database.password");
+        String pwd = config.getString("database.password");
 
-        Connection conn = null;
+        Connection connection = null;
 
         try
         {
-            conn = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection(url, user, pwd);
 
-            System.out.println(conn);
+            System.out.println(connection);
 
-            conn.close();
+            connection.close();
 
         } catch (SQLException ex)
         {
