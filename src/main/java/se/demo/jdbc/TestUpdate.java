@@ -32,6 +32,8 @@ public class TestUpdate
             System.out.println("VendorError: " + ex.getErrorCode());
         } finally
         {
+
+
             if (stmt != null)
             {
                 try
