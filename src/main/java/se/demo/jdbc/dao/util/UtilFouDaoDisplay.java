@@ -5,7 +5,7 @@ import se.demo.jdbc.entites.Fournisseur;
 
 import java.util.List;
 
-public class Display
+public class UtilFouDaoDisplay
 {
     public static void display(FournisseurDao fournisseurDao){
         List<Fournisseur> fournisseurs = fournisseurDao.extraire();

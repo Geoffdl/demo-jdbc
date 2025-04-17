@@ -1,6 +1,8 @@
-package se.demo.jdbc.dao;
+package se.demo.jdbc.dao.extra;
 
-import se.demo.jdbc.dao.util.Display;
+import se.demo.jdbc.dao.FournisseurDao;
+import se.demo.jdbc.dao.FournisseurDaoJDBC;
+import se.demo.jdbc.dao.util.UtilFouDaoDisplay;
 import java.util.Scanner;
 
 public class TestSuppressionParMotCle
@@ -11,7 +13,7 @@ public class TestSuppressionParMotCle
         Scanner scanner = new Scanner(System.in);
 
         // display all
-        Display.display(fournisseurDao);
+        UtilFouDaoDisplay.display(fournisseurDao);
 
         //method
         System.out.println("Delete by keyword: ");
@@ -19,6 +21,6 @@ public class TestSuppressionParMotCle
         fournisseurDao.deleteByKeyword(scInput);
 
         //display all
-        Display.display(fournisseurDao);
+        UtilFouDaoDisplay.display(fournisseurDao);
     }
 }

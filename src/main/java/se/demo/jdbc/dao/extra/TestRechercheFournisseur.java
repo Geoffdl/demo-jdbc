@@ -1,5 +1,7 @@
-package se.demo.jdbc.dao;
+package se.demo.jdbc.dao.extra;
 
+import se.demo.jdbc.dao.FournisseurDao;
+import se.demo.jdbc.dao.FournisseurDaoJDBC;
 import se.demo.jdbc.entites.Fournisseur;
 
 import java.util.ArrayList;

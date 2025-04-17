@@ -1,5 +1,6 @@
 package se.demo.jdbc.dao;
 
+import se.demo.jdbc.dao.extra.FournisseurIdNotFound;
 import se.demo.jdbc.entites.Fournisseur;
 
 import java.sql.*;
@@ -59,7 +60,6 @@ public class FournisseurDaoJDBC implements FournisseurDao
         }
 
     }
-
 
     @Override
     public int update(String ancienNom, String nouveauNom)
@@ -160,7 +160,7 @@ public class FournisseurDaoJDBC implements FournisseurDao
     }
 
     @Override
-    public Fournisseur findById(int id)
+    public Fournisseur findById(int id) throws FournisseurIdNotFound
     {
         Fournisseur fournisseur = null;
         try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
@@ -173,6 +173,9 @@ public class FournisseurDaoJDBC implements FournisseurDao
                 {
                     fournisseur = new Fournisseur(resultSet.getInt("id"), resultSet.getString("nom"));
 
+                } else
+                {
+                    throw new FournisseurIdNotFound("No matching id found for id: " + id);
                 }
             }
 
