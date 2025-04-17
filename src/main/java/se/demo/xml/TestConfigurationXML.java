@@ -14,21 +14,19 @@ public class TestConfigurationXML
     public static void main(String[] args)
     {
 
-
-        Configurations configs = new Configurations();
-        XMLConfiguration config = null;
-
         try
         {
-            config = configs.xml("db.xml");
+            Configurations configs = new Configurations();
+            XMLConfiguration config = configs.xml("database.xml");
 
+            //hardcode version
             String nomBase = config.getString("database[@nom]");
             String host = config.getString("database.host");
             String port = config.getString("database.port");
             String user = config.getString("database.user");
             String pwd = config.getString("database.pwd");
 
-            HashSet<String> keySet = new HashSet<>(Set.of(nomBase,host,port,user,pwd));
+            HashSet<String> keySet = new HashSet<>(Set.of(nomBase, host, port, user, pwd));
             System.out.println("Settings set: " + keySet);
 
             HashMap<String, String> keyMap = new HashMap<>();
@@ -39,19 +37,16 @@ public class TestConfigurationXML
             keyMap.put("database.password", pwd);
 
             System.out.println("Settings map: " + keyMap);
-            System.out.println(keyMap);
+
+
+            //iterate version
+            config.subset("database").getKeys()
+                    .forEachRemaining(key -> System.out.println(key + " = " + config.getString("database." + key)));
 
         } catch (ConfigurationException e)
         {
             throw new RuntimeException(e);
         }
-
-//        config.getKeys().forEachRemaining(key -> {
-//            String value = config.getString(key);
-//            System.out.println(key + " = " + value);
-//        });
-
-
 
 
     }
