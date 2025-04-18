@@ -27,7 +27,7 @@ public class FournisseurDaoJDBC implements FournisseurDao
             while (cursor.next())
             {
                 fournisseurList.add(new Fournisseur(cursor.getInt("id"), cursor.getString("nom")));
-//                fournisseurList.add(new Fournisseur( cursor.getString("nom")));
+                /* fournisseurList.add(new Fournisseur( cursor.getString("nom"))); */
             }
 
         } catch (SQLException ex)
@@ -187,4 +187,115 @@ public class FournisseurDaoJDBC implements FournisseurDao
         }
         return fournisseur;
     }
+
+    @Override
+    public void insertIfNotExists(Fournisseur fournisseur)
+    {
+        Fournisseur compare = null;
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM FOURNISSEUR WHERE ID = ?");
+        )
+        {
+            statement.setInt(1, fournisseur.getId());
+            ResultSet resultSet = statement.executeQuery();
+
+            compare = new Fournisseur(resultSet.getInt("id"),resultSet.getString("nom"));
+            if(compare.getId() == fournisseur.getId()){
+
+                try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO  FOURNISSEUR VALUES (?,?)")){
+                    preparedStatement.setInt(1,fournisseur.getId());
+                    preparedStatement.setString(2,fournisseur.getNom());
+
+                    preparedStatement.executeUpdate();
+                } catch (SQLException ex)
+                {
+                    System.out.println("SQLException: " + ex.getMessage());
+                    System.out.println("SQLState: " + ex.getSQLState());
+                    System.out.println("VendorError: " + ex.getErrorCode());
+                }
+            }
+
+
+        } catch (SQLException ex)
+        {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
+
+    @Override
+    public List<Fournisseur> findAllSorted(String orderBy, boolean ascending)
+    {
+        List<Fournisseur> fournisseurs = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM FOURNISSEUR ORDER BY ?, ?"))
+        {
+            preparedStatement.setString(1,orderBy);
+            if(ascending){
+                preparedStatement.setString(2,"ASC");
+            } else {
+                preparedStatement.setString(2,"DESC");
+            }
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                fournisseurs.add(new Fournisseur(resultSet.getInt("id"),resultSet.getString("nom")));
+            }
+            resultSet.close();
+
+        } catch (SQLException ex)
+        {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+
+        return fournisseurs;
+    }
+
+    @Override
+    public int updateByKeywordAndAddSuffix(String keyword, String suffix)
+    {
+        int updatedRows = 0;
+        try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE FOURNISSEUR SET FOURNISSEUR.NOM = NOM + ? WHERE FOURNISSEUR.NOM LIKE ?"))
+        {
+            preparedStatement.setString(1,suffix);
+            preparedStatement.setString(2, "%"+keyword+"%");
+            updatedRows = preparedStatement.executeUpdate();
+
+        } catch (SQLException ex)
+        {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        return updatedRows;
+    }
+
+    @Override
+    public int insertAll(List<Fournisseur> fournisseurs)
+    {
+        int result = 0;
+        try (Connection connection = DriverManager.getConnection(URL, USER, PWD);
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO FOURNISSEUR VALUES (?,?)"))
+        {
+            for(Fournisseur fournisseur :fournisseurs){
+                preparedStatement.setInt(1,fournisseur.getId());
+                preparedStatement.setString(2,fournisseur.getNom());
+                preparedStatement.executeUpdate();
+               result ++;
+            }
+
+        } catch (SQLException ex)
+        {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        return result;
+    }
+
 }

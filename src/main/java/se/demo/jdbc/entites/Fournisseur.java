@@ -5,6 +5,11 @@ public class Fournisseur
     int id;
     String nom;
 
+    public Fournisseur(String nom)
+    {
+        this.nom = nom;
+    }
+
     public Fournisseur(int id, String nom)
     {
         this.id = id;

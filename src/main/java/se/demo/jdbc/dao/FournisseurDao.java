@@ -15,11 +15,17 @@ public interface FournisseurDao
 
     boolean delete(Fournisseur fournisseur);
 
+    /* extra 1*/
     List<Fournisseur> findByKeyword(String keyword);
-
     int deleteByKeyword(String keyword);
-
     Fournisseur findById(int id) throws FournisseurIdNotFound;
+
+    /* extra 2*/
+    void insertIfNotExists(Fournisseur fournisseur);
+    List<Fournisseur> findAllSorted(String orderBy, boolean ascending);
+    int updateByKeywordAndAddSuffix(String keyword, String suffix);
+    int insertAll(List<Fournisseur> fournisseurs);
+
 
 
 }
